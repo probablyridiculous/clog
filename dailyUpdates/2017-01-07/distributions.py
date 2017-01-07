@@ -23,16 +23,19 @@ class Distribution(object):
 	
 	def Histogram(self):
 		'''Count the number of instances for each value drawm in the randomly generated sample dataset.'''
-		 return(pd.value_counts(self.sample).sort_index())
+		return(pd.value_counts(self.sample).sort_index())
 
 	def reSample(self,N=100):
 		'''Redraw the sample dataset.'''
 		self.sample = np.random.choice(range(Distribution.draws),Distribution.draws)
 
-	def plotDistribution(self,color='g'):
+	def plotDistribution(self,color='g',log=True):
 		'''Plot the probability distribution.'''
 		plt.figure()
-	        plt.semilogy(self.distribution,color+'o:')
+		if log:
+		        plt.semilogy(self.distribution,color+'o:')
+		else:
+			plt.plot(self.distribution,color+'o:')
         	plt.title(self.name + ' Distribution with Shape Parameter: '+str(self.shape))
 	        plt.xlabel('x [items]')
 	        plt.ylabel('pdf(x) [likelihood of x items]')
@@ -61,7 +64,7 @@ class Poisson(Distribution):
 	def __init__(self,shape):
                 Distribution.__init__(self,shape)
                 self.name = "Poisson"
-                self.distribution = ss.zipf.pmf(range(Distribution.draws),shape)
+                self.distribution = ss.poisson.pmf(range(Distribution.draws),shape)
 		samplesize = 100
 		if samplesize < 2*shape:
 			samplesize = 2.1*shape 
